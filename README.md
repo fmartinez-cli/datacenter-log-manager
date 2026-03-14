@@ -16,7 +16,7 @@
 
 | Main Menu | Log Collection | Connectivity Report |
 |:---:|:---:|:---:|
-| ![Main Menu](docs/screenshots/main_menu.png) | ![Log Collection](docs/screenshots/collect_logs.png) | ![Connectivity](docs/screenshots/connectivity.png) |
+| ![Main Menu](assets/main_menu.jpg) | ![Log Collection](docs/screenshots/collect_logs.png) | ![Connectivity](docs/screenshots/connectivity.png) |
 
 | Node Info | Service Management | FTP Upload |
 |:---:|:---:|:---:|
