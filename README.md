@@ -271,7 +271,7 @@ This project is licensed under the [MIT License](LICENSE).
 ## 👨‍💻 Author
  
 **Fernando Martinez Barbosa**
-- LinkedIn: [linkedin.com/in/your-profile](https://linkedin.com/in/your-profile)
+- LinkedIn: www.linkedin.com/in/fernando-martinez-barbosa-643894142
 - GitHub: [@fmartinez-cli](https://github.com/fmartinez-cli)
  
 ---
