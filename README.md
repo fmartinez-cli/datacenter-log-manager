@@ -14,31 +14,31 @@
 
 ## 📸 Screenshots
 
-| Main Menu | Log Collection | Connectivity Report |
+| Dash Icon | Main Menu  | Log Collection |
 |:---:|:---:|:---:|
-| ![Main Menu](assets/main_menu.jpg) | ![Log Collection](docs/screenshots/collect_logs.png) | ![Connectivity](docs/screenshots/connectivity.png) |
+| ![Dash Icon](assets/dash_icon.jpg) | ![Main Menu](assets/main_menu.jpg) | ![collection_logs_submenu](assets/collect_logs_submenu.jpg) |
 
-| Node Info | Service Management | FTP Upload |
+| Dialog | Upload confirmation| Logs Demo |
 |:---:|:---:|:---:|
-| ![Node Info](docs/screenshots/node_info.png) | ![Services](docs/screenshots/services.png) | ![FTP](docs/screenshots/ftp_upload.png) |
+|  ![collect dialog](assets/collect_logs_dialog.jpg) | ![Upload Confirmation](assets/upload_confirmation.jpg) | ![Logs Demo](assets/logs_demo.jpg) |
 
 > _Click images to enlarge_
 ---
 
 ## 🎯 Problem It Solves
-
+ 
 In multi-shift data center environments, operators frequently need to run the same set of commands against tens of nodes — collecting logs, verifying services, checking connectivity, uploading archives. Doing this manually via terminal introduces:
-
+ 
 - **Typing errors** in node names, IP addresses, and remote paths
 - **Inconsistency** between operators with different experience levels
 - **No validation** before commands execute against live infrastructure
-
+ 
 This tool wraps all of those workflows into a validated, menu-driven GUI. Every input is checked before any command runs. Operators click instead of type.
-
+ 
 ---
-
+ 
 ## 🚀 Features
-
+ 
 - **First-run Setup Wizard** — interactive configuration on first launch; no manual file editing required
 - **Log Collection** — collects logs from individual or all nodes via SSH; compresses into `.tar.gz` archives organized by ticket/job ID
 - **FTP Upload** — uploads staged archives to a central server; single node or full batch
@@ -50,11 +50,11 @@ This tool wraps all of those workflows into a validated, menu-driven GUI. Every 
 - **Live Log Tail** — opens a live `tail -f` session for any log file in a new terminal
 - **Input Validation** — all entries (ticket IDs, node names, IP addresses) are validated before any command executes
 - **Zero hardcoded credentials** — all sensitive data lives in an external config file (`600` permissions)
-
+ 
 ---
-
+ 
 ## 🛠️ Tech Stack
-
+ 
 | Component | Technology |
 |---|---|
 | Language | Bash (POSIX-compatible) |
@@ -64,78 +64,93 @@ This tool wraps all of those workflows into a validated, menu-driven GUI. Every 
 | Compression | tar + gzip |
 | Service management | systemctl |
 | Testing | Bash unit tests with mocked dependencies |
-
+ 
 ---
-
+ 
 ## 📁 Project Structure
-
+ 
 ```
 datacenter-log-manager/
 ├── datacenter_log_manager.sh      # Main script
+├── install.sh                     # Installer — dependencies, icon, desktop launcher
 ├── test_datacenter_log_manager.sh # Unit test suite (36 tests, no GUI required)
 ├── settings.conf.example          # Config template — copy to ~/.config/dclogmanager/
+├── assets/                        # Screenshots for README
 └── README.md
 ```
-
+ 
 **Config file location:** `~/.config/dclogmanager/settings.conf`
 Never committed to version control — see `.gitignore`.
-
+ 
 ---
-
+ 
 ## ⚙️ Installation
-
+ 
 ### Requirements
-
+ 
 - Linux with a desktop environment (GNOME or compatible)
 - `zenity`, `curl`, `tar`, `ssh`, `ping`, `systemctl`
-
+ 
 ### Install dependencies
-
+ 
 ```bash
 # Ubuntu / Debian
 sudo apt install zenity openssh-client curl
-
+ 
 # Fedora / RHEL
 sudo dnf install zenity openssh-clients curl
 ```
-
+ 
 ### Setup
-
+ 
 ```bash
 # 1. Clone the repository
 git clone https://github.com/fmartinez-cli/datacenter-log-manager.git
 cd datacenter-log-manager
-
-# 2. Make the script executable
-chmod +x datacenter_log_manager.sh
-
-# 3. Run — the setup wizard launches automatically on first run
-./datacenter_log_manager.sh
+ 
+# 2. Run the installer
+chmod +x install.sh
+./install.sh
 ```
-
-The wizard will prompt for:
+ 
+The installer will:
+- Verify all required dependencies are present
+- Install the script to `~/.local/bin/`
+- Generate and install a custom icon
+- Create a launcher in the GNOME app menu (searchable by name)
+- Set config file permissions to `600` automatically
+ 
+After installation, launch the app from the GNOME dash or by searching **"DataCenter"** in the app menu. On first run, the setup wizard will prompt for:
 - FTP server host, username, and password
 - SSH username for remote nodes
 - Node naming prefix and range (e.g. `node`, `1` to `40`)
 - Services to monitor (comma-separated)
-
-All values are saved to `~/.config/dclogmanager/settings.conf` with `chmod 600` automatically applied.
-
+ 
+### Uninstall
+ 
+```bash
+./install.sh --uninstall
+```
+ 
+Removes the script, icon, and desktop launcher. Your config file at `~/.config/dclogmanager/settings.conf` is preserved.
+ 
 ---
-
+ 
 ## 🔧 Manual Configuration
-
-If you prefer to configure manually instead of using the wizard:
-
+ 
+If you prefer to configure manually instead of using the setup wizard:
+ 
 ```bash
 mkdir -p ~/.config/dclogmanager
 cp settings.conf.example ~/.config/dclogmanager/settings.conf
 chmod 600 ~/.config/dclogmanager/settings.conf
 nano ~/.config/dclogmanager/settings.conf
 ```
-
+ 
+To reconfigure at any time, select **Setup / Reconfigure** from the main menu or re-run the installer.
+ 
 ### Available configuration variables
-
+ 
 | Variable | Description | Example |
 |---|---|---|
 | `FTP_HOST` | FTP server hostname or IP | `192.168.1.100` |
@@ -148,11 +163,11 @@ nano ~/.config/dclogmanager/settings.conf
 | `NODE_END` | Last node number | `40` |
 | `SERVICES` | Comma-separated services to monitor | `ssh,cron,rsyslog` |
 | `HELP_URL` | URL opened by the Help option | `https://...` |
-
+ 
 ---
-
+ 
 ## 📋 Menu Structure
-
+ 
 ```
 Main Menu
 ├── 📦 Log Management
@@ -175,19 +190,19 @@ Main Menu
 ├── 🔧 Setup / Reconfigure
 └── ❓ Help
 ```
-
+ 
 ---
-
+ 
 ## 🧪 Running Tests
-
+ 
 The test suite covers all non-GUI functions and runs headlessly — no display or live infrastructure required.
-
+ 
 ```bash
 bash test_datacenter_log_manager.sh
 ```
-
+ 
 **Current coverage: 36 tests, 0 failures**
-
+ 
 ```
 ▶ validate_ticket_id       10 tests
 ▶ validate_node_name        7 tests
@@ -196,66 +211,70 @@ bash test_datacenter_log_manager.sh
 ▶ Configuration file        7 tests
 ▶ Script syntax             1 test
 ```
-
+ 
 All external dependencies (`zenity`, `ssh`, `systemctl`, `curl`) are mocked so tests run safely without touching any real systems.
-
+ 
 ---
-
+ 
 ## 🔒 Security
-
+ 
 - **No credentials in source code** — all sensitive values live in an external config file outside the repository
-- **Config file permissions** — automatically set to `600` (owner read/write only) by the setup wizard
+- **Config file permissions** — automatically set to `600` (owner read/write only) by the installer and setup wizard
 - **Input validation before execution** — ticket IDs, node names, and IP addresses are validated with strict patterns before any SSH, curl, or system command runs
 - **SSH with timeout** — all SSH calls use `ConnectTimeout=10` and `BatchMode=yes` to prevent hanging on unreachable nodes
-
+ 
 Add to your `.gitignore`:
 ```
 settings.conf
 ```
-
+ 
 ---
+ 
 ## 🗺️ Roadmap
-
+ 
 ### v2.0 (Current)
 - ✅ Core log collection and upload
 - ✅ Service management
 - ✅ Node hardware info
-
+- ✅ Automated installer with desktop launcher
+ 
 ### v2.1 (Planned)
 - 🔄 Parallel node operations (faster collection)
 - 🔄 Email notifications on completion
 - 🔄 Configuration profiles (dev/staging/prod)
-
+ 
 ### v3.0 (Future)
 - 📅 Web interface alternative to Zenity
 - 📅 REST API for integration
 - 📅 Dashboard with historical data
-
+ 
 ---
+ 
 ## 🤝 Contributing
-
+ 
 Pull requests are welcome. For major changes, please open an issue first.
-
+ 
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/my-feature`)
 3. Add tests for any new validation or core logic
 4. Commit (`git commit -m 'feat: description'`)
 5. Push and open a Pull Request
-
+ 
 ---
-
+ 
 ## 📄 License
-
+ 
 This project is licensed under the [MIT License](LICENSE).
-
+ 
 ---
-
+ 
 ## 👨‍💻 Author
-
+ 
 **Fernando Martinez Barbosa**
 - LinkedIn: [linkedin.com/in/your-profile](https://linkedin.com/in/your-profile)
 - GitHub: [@fmartinez-cli](https://github.com/fmartinez-cli)
-
+ 
 ---
-
+ 
 > _Built from a real operational need: giving multi-shift data center operators a consistent, error-free way to collect and upload logs — regardless of their command-line experience level._
+
